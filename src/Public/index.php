@@ -1,10 +1,11 @@
 <?php
 
-use Gomilkyway\Nutrition\Models\Food\AbstractFood;
-use Gomilkyway\Nutrition\Models\Food\Meal;
-use Gomilkyway\Nutrition\Models\Nutritions\Carbohydrate;
-use Gomilkyway\Nutrition\Models\Nutritions\Fat;
-use Gomilkyway\Nutrition\Models\Nutritions\Protein;
+
+use App\Models\Food\AbstractFood;
+use App\Models\Food\Meal;
+use App\Models\Nutritions\Carbohydrate;
+use App\Models\Nutritions\Fat;
+use App\Models\Nutritions\Protein;
 
 
 $rice = new AbstractFood("Rice", 100);

@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Gomilkyway\Nutrition\Errors;
+namespace App\Errors;
 
 /**
  * Exception handler
  *
  * @copyright  Copyright (C) Gomilkyway (https://gomilkyway.com)
- * @package    Gomilkyway\Nutrition\Errors\Exception
+ * @package    App\Errors\Exception
  * @author     Adari ARi
  * @version    0.1.0
  * @license    MIT License (https://opensource.org/licenses/mit-license.php)

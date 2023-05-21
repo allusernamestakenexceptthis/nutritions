@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace Gomilkyway\Nutrition\Models\Nutritions;
+namespace App\Models\Nutritions;
 
 /**
  * This abstract class acts as parent that holds common methods, input and output
  *
  * @copyright  Copyright (C) Gomilkyway (https://gomilkyway.com)
- * @package    Gomilkyway\Nutrition\Models\Nutritions
+ * @package    App\Models\Nutritions
  * @author     Adari ARi
  * @version    0.1.0
  * @license    MIT License (https://opensource.org/licenses/mit-license.php)
  */
 
-use Gomilkyway\Nutrition\Errors\Exception;
-use Gomilkyway\Nutrition\Utils\UnitConverter;
+use App\Errors\Exception;
+use App\Utils\UnitConverter;
 
 abstract class AbstractNutrition implements InterfaceNutrition
 {
@@ -22,7 +22,7 @@ abstract class AbstractNutrition implements InterfaceNutrition
     protected string $name = "";
     protected string $code = "";
     protected string $description = "";
-    protected array $extra = [];
+    protected array $extras = [];
 
 
 
@@ -57,7 +57,7 @@ abstract class AbstractNutrition implements InterfaceNutrition
 
         $energy = $caloriesPerMg * $weightInMg;
 
-        return $this->converter($energy, "cal", $caloriesIn);
+        return intval($this->converter($energy, "cal", $caloriesIn));
     }
 
     public function setEnergy(int $calories, string $in, string $per): int
@@ -90,9 +90,9 @@ abstract class AbstractNutrition implements InterfaceNutrition
         return $this->description;
     }
 
-    public function getExtra(): array
+    public function getExtras(): array
     {
-        return $this->extra;
+        return $this->extras;
     }
 
     public function setDescription(string $description): void
@@ -100,9 +100,9 @@ abstract class AbstractNutrition implements InterfaceNutrition
         $this->description = $description;
     }
 
-    public function setExtra(array $extra): void
+    public function setExtras(array $extras): void
     {
-        $this->extra = $extra;
+        $this->extras = $extras;
     }
 
 

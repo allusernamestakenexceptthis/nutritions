@@ -1,24 +1,24 @@
 <?php
 declare(strict_types=1);
 
-namespace Gomilkyway\Nutrition\Models\Nutritions;
+namespace App\Models\Nutritions;
 
 /**
- * Fat class
+ * Protein class
  *
  * @copyright  Copyright (C) Gomilkyway (https://gomilkyway.com)
- * @package    Gomilkyway\Nutrition\Models\Nutritions
+ * @package    App\Models\Nutritions
  * @author     Adari ARi
  * @version    0.1.0
  * @license    MIT License (https://opensource.org/licenses/mit-license.php)
  */
 
-class Fat extends AbstractNutrition
+class Protein extends AbstractNutrition
 {
     public function __construct()
     {
-        $kcal = 9;
+        $kcal = 4;
 
-        parent::__construct("Fat", $kcal, "F", "kcal", "g");
+        parent::__construct("Protein", $kcal, "P", "kcal", "g");
     }
 }
