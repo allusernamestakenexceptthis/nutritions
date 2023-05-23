@@ -17,6 +17,7 @@ class Protein extends AbstractNutrition
 {
     public function __construct()
     {
+        //set the kcal per gram
         $kcal = 4;
 
         parent::__construct("Protein", $kcal, "P", "kcal", "g");

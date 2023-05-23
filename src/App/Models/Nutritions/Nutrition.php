@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Nutritions;
 
 /**
- * Carbohydrate class
+ * Nutrition model to act as new instance
  *
  * @copyright  Copyright (C) Gomilkyway (https://gomilkyway.com)
  * @package    App\Models\Nutritions
@@ -13,13 +13,8 @@ namespace App\Models\Nutritions;
  * @license    MIT License (https://opensource.org/licenses/mit-license.php)
  */
 
-class Carbohydrate extends AbstractNutrition
-{
-    public function __construct()
-    {
-        //set the kcal per gram
-        $kcal = 4;
 
-        parent::__construct("Carbohydrates", $kcal, "C", "kcal", "g");
-    }
+class Nutrition extends AbstractNutrition
+{
+
 }

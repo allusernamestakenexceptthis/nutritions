@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Models\Food;
 
 /**
- * This interface is used to define the methods that will be used in all Food classes
+ * Abstract class acts as parent that holds common methods, input and output
  *
  * @copyright  Copyright (C) Gomilkyway (https://gomilkyway.com)
- * @package    App\Models\Nutritions
+ * @package    App\Models\Food
  * @author     Adari ARi
  * @version    0.1.0
  * @license    MIT License (https://opensource.org/licenses/mit-license.php)
@@ -16,24 +16,45 @@ namespace App\Models\Food;
 use App\Models\Nutritions\AbstractNutrition;
 use App\Utils\UnitConverter;
 
-class AbstractFood implements InterfaceFood
+abstract class AbstractFood implements InterfaceFood
 {
-    protected $name = ""; /*string*/
+    //holds the food name
+    protected string $name = "";
 
-    protected $foodWeight = 0; /*float*/
-    protected $calories = 0; /*float*/
-    protected $nutritions = []; /*array*/
+    //holds the food weight
+    protected float $foodWeight = 0;
 
+    //holds the food weight unit
+    protected float $calories = 0;
+
+    //holds the food nutritions
+    protected array $nutritions = [];
+
+    /**
+     * AbstractFood constructor.
+     *
+     * @param string $name    food name
+     * @param mixed  $weight  food weight
+     */
     public function __construct(string $name, mixed $weight)
     {
         $this->name = $name;
         $this->setWeight($weight);
     }
 
-    public function addNutrition(AbstractNutrition $nutrition, mixed $nutritionWeight, mixed $each = 1): void
+    /**
+     * Add nutrition to the food
+     *
+     * @param AbstractNutrition $nutrition          Nutrition object
+     * @param mixed             $nutritionWeight    Nutrition weight format number + unit e.g. 1g
+     * @param mixed             $each               For each X weight e.g. 100g
+     * @return void
+     */
+    public function addNutrition(AbstractNutrition $nutrition, mixed $nutritionWeight, mixed $each = 100): void
     {
         list($weight, $unit) = UnitConverter::getValueWithUnit($nutritionWeight, "g");
         list($eachValue, $eachUnit) = UnitConverter::getValueWithUnit($each, "g");
+
 
         $nutrition = [
             'model' => $nutrition,
@@ -48,6 +69,11 @@ class AbstractFood implements InterfaceFood
         $this->nutritions[] = $nutrition;
     }
 
+    /**
+     * Recalculate the calories and return the value
+     *
+     * @return float energy in calories per mg
+     */
     public function recalculate(): float
     {
         $this->calories = 0;
@@ -57,15 +83,30 @@ class AbstractFood implements InterfaceFood
         return $this->calories;
     }
 
+    /**
+     * Add to the calories calculations
+     *
+     * @param array $nutrition holds nutrition information:
+     *              model (nutrition object), weight, weight unit, each, each unit
+     * @return void
+     */
     public function addToCalculation(array &$nutrition): void
     {
         //convert each to mg
-        $inMg = UnitConverter::convert($nutrition['each'], $nutrition['each_unit'], "mg");
+        $eachInMg = (float)bcdiv((string)$this->foodWeight, (string)UnitConverter::convert($nutrition['each'], $nutrition['each_unit'], "mg"));
 
-        $nutrition['energyInCPerMg'] = ($nutrition['model']->getEnergy($nutrition['weight'], "kcal", $nutrition['weight_unit']) / $inMg);
+        $weightInMg = (float)bcmul((string)UnitConverter::convert($nutrition['weight'], $nutrition['weight_unit'], "mg"), (string)$eachInMg, 10);
+
+        $nutrition['energyInCPerMg'] = ($nutrition['model']->getEnergy($weightInMg, "cal", "mg"));
         $this->calories += $nutrition['energyInCPerMg'];
     }
 
+    /**
+     * Set the weight of the food
+     *
+     * @param mixed $weight
+     * @return void
+     */
     public function setWeight(mixed $weight): void
     {
         list($weight, $unit) = UnitConverter::getValueWithUnit($weight, "g");
@@ -73,19 +114,67 @@ class AbstractFood implements InterfaceFood
         $this->foodWeight = $weightInMg;
     }
 
-    public function converter(mixed $value, string $from, string $to): mixed
+    /**
+     * Get the food name
+     *
+     * @return string
+     */
+    public function getName(): string
     {
-        foreach ($this->nutritions as $nutrition) {
-            $value = $nutrition->converter($value, $from, $to);
+        return $this->name;
+    }
+
+    /**
+     * Set the food name
+     *
+     * @param string $name
+     * @return void
+     */
+    public function setName(string $name): void
+    {
+        if (empty($name)) {
+            throw new \InvalidArgumentException("Food name cannot be empty");
         }
-        return $value;
+        $this->name = $name;
     }
 
-    public function getCalories()
+    /**
+     * Get the food Calories (kcal) prt gram
+     *
+     * @return integer
+     */
+    public function getKCal(): int
     {
-        return $this->calories * $this->foodWeight;
+        $kcalories = UnitConverter::convert($this->calories, "cal", "kcal");
+
+        return (int)round($kcalories);
     }
 
+    /**
+     * Get the food Calories (cal)
+     *
+     * @return float
+     */
+    public function getCalories(): float
+    {
+        return $this->calories;
+    }
+
+    /**
+     * Get the food weight
+     *
+     * @return float
+     */
+    public function getWeight() : float
+    {
+        return $this->foodWeight;
+    }
+
+    /**
+     * Get the food nutritional facts
+     *
+     * @return array
+     */
     public function getNutritionalFacts($energyUnit = "kcal", $weightUnit = "g"): array
     {
         $nutritionalFacts = [];
@@ -112,14 +201,16 @@ class AbstractFood implements InterfaceFood
             $energyInDesiredUnit = UnitConverter::convert($nutrition['energyInCPerMg'], "cal", $energyUnit);
             $weightInDesiredUnit = UnitConverter::convert($nutrition['weight'], $nutrition['weight_unit'], $weightUnit);
 
-            $totalSingleEnergy += $energyInDesiredUnit * $foodWeightInDesiredUnit;
+            $energyInDesiredUnitSingle = (float)bcdiv((string)$energyInDesiredUnit, (string)$foodWeightInDesiredUnit, 10);
+
+            $totalSingleEnergy += $energyInDesiredUnitSingle;
             $totalEnergy += $energyInDesiredUnit;
 
             $nutritionalFacts[$key]['singleEnergy'] += $energyInDesiredUnit;
             $nutritionalFacts[$key]['singleWeight'] += $weightInDesiredUnit;
 
-            $nutritionalFacts[$key]['energy'] += $energyInDesiredUnit * $foodWeightInDesiredUnit;
-            $nutritionalFacts[$key]['weight'] += $weightInDesiredUnit * $foodWeightInDesiredUnit;
+            $nutritionalFacts[$key]['energy'] += $energyInDesiredUnit;
+            $nutritionalFacts[$key]['weight'] += $weightInDesiredUnit;
 
         }
         return [

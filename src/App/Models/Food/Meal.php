@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Food;
 
 /**
- * This interface is used to define the methods that will be used in all Food classes
+ * Meal class acts as a food builder, a container for multiple foods
  *
  * @copyright  Copyright (C) Gomilkyway (https://gomilkyway.com)
  * @package    App\Models\Nutritions
@@ -17,15 +17,34 @@ use App\Utils\UnitConverter;
 
 class Meal
 {
+    // foods list
     private array $foods = [];
+
+    // meal name
     private string $name = "";
 
+    // total calories
     protected float $calories = 0;
 
+    // total weight
+    protected float $weight = 0;
+
+    /**
+     * Meal constructor
+     *
+     * @param [type] $name  meal name
+     */
     public function __construct($name)
     {
         $this->name = $name;
     }
+
+    /**
+     * Add food to the meal
+     *
+     * @param AbstractFood $food  food object
+     * @return void
+     */
     public function addFood(AbstractFood $food): void
     {
 
@@ -34,23 +53,50 @@ class Meal
             'energyInCPerMg' => 0
         ];
 
+        $this->weight += $food['model']->getWeight();
         $this->addToCalculation($food);
 
         $this->foods[] = $food;
 
     }
 
+    /**
+     * Add food to the calculation
+     *
+     * @param array $food  food array containing model (Food)
+     * @return void
+     */
     public function addToCalculation(array &$food): void
     {
         $food['energyInCPerMg'] = $food['model']->getCalories();
         $this->calories += $food['energyInCPerMg'];
     }
 
+    /**
+     * Get the total calories of the meal (cal)
+     *
+     * @return float
+     */
     public function getCalories(): float
     {
         return $this->calories;
     }
 
+    /**
+     * Get the total Calories of the meal (kcal)
+     *
+     * @return int
+     */
+    public function getKCal(): int
+    {
+        return (int)round(UnitConverter::convert($this->getCalories(), "cal", "kcal"));
+    }
+
+    /**
+     * Get the nutritional facts of the meal
+     *
+     * @return array
+     */
     public function getNutritionalFacts($energyUnit = "kcal", $weightUnit = "g"): array
     {
         $foods = array();
@@ -61,6 +107,11 @@ class Meal
         return $foods;
     }
 
+    /**
+     * Get the nutritional facts of the meal per food
+     *
+     * @return array
+     */
     public function getFactsPerFood($energyUnit = "kcal", $weightUnit = "g"): array
     {
         $foods = array();
@@ -70,11 +121,44 @@ class Meal
         return $foods;
     }
 
+    /**
+     * Get the name of the meal
+     *
+     * @return float
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * Set the name of the meal
+     *
+     * @param string $name  meal name
+     * @return void
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Get the weight of the meal
+     *
+     * @return float
+     */
+    public function getWeight(): float
+    {
+        return $this->weight;
+    }
+
+    /**
+     * Merge and sum the nutritional facts of the different foods
+     *
+     * @param array $data  nutritional facts
+     * @param array $nutritions  nutritional facts
+     * @return array
+     */
     private function mergeAndSum($data, $nutritions) : array
     {
         foreach ($data as $key => $value) {
@@ -96,6 +180,5 @@ class Meal
 
         return $nutritions;
     }
-
 
 }

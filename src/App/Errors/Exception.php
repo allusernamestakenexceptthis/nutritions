@@ -19,4 +19,12 @@ namespace App\Errors;
      {
          parent::__construct($message, $code, $previous);
      }
+
+     public function __toString(): string
+     {
+        $ret = __CLASS__ . ": [{$this->code}]: {$this->message}\n";
+        $ret .= "Stack trace:\n" . $this->getTraceAsString() . "\n";
+        return $ret;
+     }
+
  }

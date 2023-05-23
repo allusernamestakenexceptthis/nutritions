@@ -19,9 +19,13 @@ interface InterfaceNutrition
 
     public function getCaloriesPerMg(): int;
 
-    public function getEnergy(float $weight, string $in, string $per): int;
+    public function getName(): string;
 
-    public function setEnergy(int $calories, string $in, string $per): int;
+    public function setName(string $name): void;
+
+    public function getEnergy(float $weight, string $in, string $per): mixed;
+
+    public function setEnergy(int $calories, string $in, string $per): mixed;
 
     public function converter(mixed $value, string $from, string $to): mixed;
 }

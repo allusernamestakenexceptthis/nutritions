@@ -17,6 +17,7 @@ class Fat extends AbstractNutrition
 {
     public function __construct()
     {
+        //set the kcal per gram
         $kcal = 9;
 
         parent::__construct("Fat", $kcal, "F", "kcal", "g");

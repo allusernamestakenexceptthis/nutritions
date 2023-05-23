@@ -18,16 +18,23 @@ use App\Errors\Exception;
 class UnitConverter
 {
 
+    // hold list of valid units and their values among each others
     private static $units;
 
 
-    public static function getUnits()
+    /**
+     * get valid units and their values, set them if not set
+     *
+     * @return array
+     */
+    public static function getUnits() : array
     {
         if (!isset(self::$units)) {
             self::$units = [
                 'weight' => [
                     "mg" => 1,
                     "g" => 1000,
+                    "kg" => 1000000,
                 ],
                 'energy' => [
                     "cal" => 1,
@@ -39,12 +46,23 @@ class UnitConverter
         return self::$units;
     }
 
-
+    /**
+     * convert value from one unit to another
+     *
+     * @param mixed $value      value to convert
+     * @param string $from      unit to convert from
+     * @param string $to        unit to convert to
+     * @return mixed            converted value
+     * @throws Exception        if invalid units given
+     */
     public static function convert(mixed $value, string $from, string $to): mixed /*throws exception*/
     {
+        if ($from == $to) {
+            return $value;
+        }
         foreach (self::getUnits() as $units) {
             if (isset($units[$from]) && isset($units[$to])) {
-                return $value * $units[$from] / $units[$to];
+                return (float)bcmul((string)$value, bcdiv((string)$units[$from], (string)$units[$to], 10), 10);
             }
         }
 
@@ -52,12 +70,29 @@ class UnitConverter
     }
 
 
+    /**
+     * validate unit
+     * check if given unit is valid for given type
+     *
+     * @param [type] $unit    unit to validate
+     * @param [type] $type    type of unit to validate
+     * @return boolean        true if valid, false otherwise
+     */
     public static function validateUnit($unit, $type): bool
     {
         $units = self::getUnits();
         return isset($units[$type][$unit]);
     }
 
+    /**
+     * get value with unit
+     * separate numerical value from unit e.g. 100g => [100, g]
+     *
+     * @param mixed $value      value to separate
+     * @param string $unit      unit to separate
+     * @return array            separated value and unit
+     * @throws Exception        if invalid value/unit given
+     */
     public static function getValueWithUnit(mixed $value, string $unit = ""): array
     {
         // if not string, then we use default
@@ -79,7 +114,7 @@ class UnitConverter
         }
 
         if (!$unit) {
-            throw new Exception("Unit not given");
+            throw new Exception("Unit not given in line: " . __LINE__);
         }
 
         return [floatval($value), $unit];

@@ -22,7 +22,15 @@ interface InterfaceFood
 
     public function setWeight(mixed $weight): void;
 
-    public function converter(mixed $value, string $from, string $to): mixed;
+    public function getWeight(): float;
+
+    public function getCalories(): float;
+
+    public function getKCal(): int;
+
+    public function getName(): string;
+
+    public function setName(string $name): void;
 
     public function getNutritionalFacts(): array;
 
