@@ -1,3 +1,5 @@
+[日本語](README-jp.md) | [ENGLISH] (README.md)
+
 # Nutritions
 
 This is a nutrition app with builder design
