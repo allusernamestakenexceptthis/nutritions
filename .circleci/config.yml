@@ -50,8 +50,10 @@ jobs:
 
       # run tests with phpunit or codecept
       #- name: Check code style
-      - run: vendor/bin/phpcs --standard=PSR12 --report=checkstyle App Tests Public | cs2pr
-
+      - run: curl -fSL https://github.com/haya14busa/reviewdog/releases/download/$REVIEWDOG_VERSION/reviewdog_linux_amd64 -o reviewdog && chmod +x ./reviewdog
+      - run: ./vendor/bin/phpcs --warning-severity=0 --standard=PSR2 --report=code --report-width=120 ./src
+      - run: |
+          ./vendor/bin/phpcs --error-severity=0 --runtime-set ignore_warnings_on_exit 1 --standard=PSR2 --report=emacs App Tests Public | ./reviewdog -efm="%f:%l:%c: %m" -reporter=github-pr-review
       # - name: Run tests
       - run: vendor/bin/phpunit
       
