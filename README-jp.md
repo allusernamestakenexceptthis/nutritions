@@ -1,5 +1,16 @@
 <p align="center">
+  <a href="https://github.com/allusernamestakenexceptthis/nutritions/actions/">
   <img src="https://github.com/allusernamestakenexceptthis/nutritions/actions/workflows/build.yml/badge.svg">
+  </a>
+
+
+  <a href="https://github.com/allusernamestakenexceptthis/nutritions/releases/">
+    <img src="https://img.shields.io/github/tag/allusernamestakenexceptthis/nutritions?include_prereleases=&sort=semver&color=blue" alt="GitHub tag">
+  </a>
+  <a href="#license"><img src="https://img.shields.io/badge/License-MIT-blue" alt="License"></a>
+  <a href="https://github.com/allusernamestakenexceptthis/nutritions/issues">
+     <img src="https://img.shields.io/github/issues/allusernamestakenexceptthis/nutritions" alt="issues - nutritions">
+  </a>
 </p>
 
 [ENGLISH](README.md)
