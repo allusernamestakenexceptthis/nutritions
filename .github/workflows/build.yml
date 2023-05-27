@@ -23,7 +23,7 @@ jobs:
           working-directory: ${{ github.workspace }}/src
 
         - name: Check code style
-          run: phpcs --standard=PSR12--report=checkstyle src/App src/Tests src/Public | cs2pr
+          run: phpcs --standard=PSR12 --report=checkstyle src/App src/Tests src/Public | cs2pr
 
         - name: Run tests
           run: phpunit
