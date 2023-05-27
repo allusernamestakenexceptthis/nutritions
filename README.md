@@ -2,7 +2,7 @@
 
 # Nutritions
 
-This is a nutrition app with builder design
+This is a nutrition app demonstrating use of composite design.  You can compose meals from foods and foods from nutritions.
 
 requires php 8.1 or later
 
@@ -99,7 +99,3 @@ You can get nutritional facts, and format it with html
 # version
 0.1.0
 bugs are possible. needs more testing
-
-# Thanks
-
-Thank you for checking this
