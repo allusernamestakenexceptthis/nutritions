@@ -11,8 +11,6 @@ jobs:
     docker:
       # Specify image version
       - image: cimg/php:8.1
-        environment:
-          REVIEWDOG_VERSION: "v0.14.1/reviewdog_0.14.1_Linux_arm64.tar.gz"
 
     #set the code working directory
     working_directory: ~/proj/src
@@ -52,10 +50,12 @@ jobs:
 
       # run tests with phpunit or codecept
       #- name: Check code style
-      - run: curl -fSL https://github.com/reviewdog/reviewdog/releases/download/$REVIEWDOG_VERSION -o reviewdog && chmod +x ./reviewdog
       - run: ./vendor/bin/phpcs --warning-severity=0 --standard=PSR12 --report=code --report-width=120 App Tests Public
-      - run: |
-          ./vendor/bin/phpcs --error-severity=0 --runtime-set ignore_warnings_on_exit 1 --standard=PSR12 --report=emacs App Tests Public | ./reviewdog -efm="%f:%l:%c: %m" -reporter=github-pr-review
+      - run: #check results
+          command: | 
+            curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
+            ./vendor/bin/phpcs --error-severity=0 --runtime-set ignore_warnings_on_exit 1 --standard=PSR12 --report=emacs App Tests Public | ./reviewdog -efm="%f:%l:%c: %m" -reporter=github-pr-review
+          when: on_fail  # 失敗時のみ実行する
       # - name: Run tests
       - run: vendor/bin/phpunit
       
