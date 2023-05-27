@@ -50,8 +50,8 @@ jobs:
 
       # run tests with phpunit or codecept
       #- name: Check code style
-      - run: phpcs --standard=PSR12 --report=checkstyle App Tests Public | cs2pr
+      - run: vendor/bin/phpcs --standard=PSR12 --report=checkstyle App Tests Public | cs2pr
 
       # - name: Run tests
-      - run: phpunit
+      - run: vendor/bin/phpunit
       
