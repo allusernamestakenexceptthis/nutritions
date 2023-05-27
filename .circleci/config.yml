@@ -10,7 +10,7 @@ jobs:
     # See: https://circleci.com/docs/configuration-reference/#docker-machine-macos-windows-executor
     docker:
       # Specify the version you desire here
-      - image: circleci/php:8.1
+      - image: cimg/php:8.1
 
     #set the code working directory
     working_directory: ~/proj/src
