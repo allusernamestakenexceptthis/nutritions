@@ -8,7 +8,7 @@
 - we must be able to construct food based on the components and future components
 - be able to get kcal of the construction
 
-Let's use the builder design
+Let's use the composite design
 
 interface NutritionInterface
      definitions for abstract nutrition
