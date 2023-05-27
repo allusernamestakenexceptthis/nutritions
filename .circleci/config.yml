@@ -9,7 +9,7 @@ jobs:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      # Specify the version you desire here
+      # Specify image version
       - image: cimg/php:8.1
 
     #set the code working directory
