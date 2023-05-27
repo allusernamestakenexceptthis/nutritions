@@ -1,0 +1,61 @@
+# PHP CircleCI 2.0 configuration file
+# See: https://circleci.com/docs/language-php/
+version: 2
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/configuration-reference/#jobs
+jobs:
+  build:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      # Specify image version
+      - image: cimg/php:8.1
+
+    #set the code working directory
+    working_directory: ~/proj/src
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/circleci-images/
+      # Using the RAM variation mitigates I/O contention
+      # for database intensive operations.
+      # - image: circleci/mysql:5.7-ram
+      #
+      # - image: redis:2.8.19
+
+    # Add steps to the job
+    # See: https://circleci.com/docs/configuration-reference/#steps
+    steps:
+      - checkout:
+          path: ~/proj
+
+      - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
+      #- run: sudo docker-php-ext-install bcmath # already loaded
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # "composer.lock" can be used if it is committed to the repo
+            - v1-dependencies-{{ checksum "composer.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: composer install -n --prefer-dist
+
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+
+      # run tests with phpunit or codecept
+      #- name: Check code style
+      - run: ./vendor/bin/phpcs --warning-severity=0 --standard=PSR12 --report=code --report-width=120 App Tests Public
+      - run: #check results
+          command: | 
+            curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
+            ./vendor/bin/phpcs --error-severity=0 --runtime-set ignore_warnings_on_exit 1 --standard=PSR12 --report=emacs App Tests Public | ./reviewdog -efm="%f:%l:%c: %m" -reporter=github-pr-review
+          when: on_fail  # 失敗時のみ実行する
+      # - name: Run tests
+      - run: vendor/bin/phpunit
+      
