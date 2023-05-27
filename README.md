@@ -1,3 +1,7 @@
+<div class="center">
+[![build](https://github.com/allusernamestakenexceptthis/nutritions/actions/workflows/build.yml/badge.svg)](https://github.com/allusernamestakenexceptthis/nutritions/actions/workflows/build.yml)
+</div>
+
 [日本語](README-jp.md) | [ENGLISH] (README.md)
 
 # Nutritions
