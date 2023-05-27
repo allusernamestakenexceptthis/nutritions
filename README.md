@@ -1,6 +1,6 @@
-<div class="center">
-[![build](https://github.com/allusernamestakenexceptthis/nutritions/actions/workflows/build.yml/badge.svg)](https://github.com/allusernamestakenexceptthis/nutritions/actions/workflows/build.yml)
-</div>
+<p align="center">
+  <img src="https://github.com/allusernamestakenexceptthis/nutritions/actions/workflows/build.yml/badge.svg">
+</p>
 
 [日本語](README-jp.md) | [ENGLISH] (README.md)
 
