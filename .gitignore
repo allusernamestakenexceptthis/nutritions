@@ -1,5 +1,6 @@
-php_errors.log
+php_errors.log*
 .vscode
 composer.phar
 vendor
 .phpunit.result.cache
+bin
