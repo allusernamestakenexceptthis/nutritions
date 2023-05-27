@@ -1,4 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Tests\Unit;
+
 use App\Testing\AbstractTestCase;
 use App\Models\Food\Food;
 use App\Models\Food\Meal;
@@ -10,14 +15,15 @@ use App\Models\Nutritions\Protein;
 
 final class FoodTest extends AbstractTestCase
 {
-
-    public function testFood() {
+    public function testFood()
+    {
         $this->setAndMeasureMethod(new Carbohydrate(), 2.5);
         $this->setAndMeasureMethod(new Protein(), 2.5);
         $this->setAndMeasureMethod(new Fat(), 2.5);
     }
 
-    public function testMeal() {
+    public function testMeal()
+    {
         $rice = new Food("rice", "100g");
 
 
@@ -60,16 +66,20 @@ final class FoodTest extends AbstractTestCase
         $this->assertEquals($meal->getKCal(), $expectedTotal);
     }
 
-    private function getNewNutrition(string $name, int $energy): AbstractNutrition {
+    private function getNewNutrition(string $name, int $energy): AbstractNutrition
+    {
         return new Nutrition($name, $energy, $name, "kcal", "g");
     }
 
-    private function setAndMeasureMethod(AbstractNutrition $nutrition, float $weight) : void {
+    private function setAndMeasureMethod(AbstractNutrition $nutrition, float $weight): void
+    {
         //kcal per g = calories per mg * 1000 / 1000
         $expectedKcal = (int)round((float)bcmul((string)$nutrition->getCaloriesPerMg(), (string)$weight, 10));
         $rice = new Food("rice", "100g");
-        $rice->addNutrition($nutrition, $weight."g", "100g");
-        $this->assertEquals($rice->getKCal(), $expectedKcal,
+        $rice->addNutrition($nutrition, $weight . "g", "100g");
+        $this->assertEquals(
+            $rice->getKCal(),
+            $expectedKcal,
             "Calories: {$nutrition->getCaloriesPerMg()}, Weight: {$weight} "
         );
     }

@@ -1,10 +1,8 @@
 <?php
-declare(strict_types=1);
-
-namespace App\Utils;
 
 /**
  * Utility for unit conversion
+ * 単位変換のためのユーティリティ
  *
  * @copyright  Copyright (C) Gomilkyway (https://gomilkyway.com)
  * @package    App\Models\Nutritions
@@ -13,21 +11,26 @@ namespace App\Utils;
  * @license    MIT License (https://opensource.org/licenses/mit-license.php)
  */
 
+declare(strict_types=1);
+
+namespace App\Utils;
+
 use App\Errors\Exception;
 
 class UnitConverter
 {
-
     // hold list of valid units and their values among each others
+    // 有効な単位とその値のリストを保持する
     private static $units;
 
 
     /**
      * get valid units and their values, set them if not set
+     * 有効な単位とその値を取得し、設定されていない場合は設定する
      *
-     * @return array
+     * @return array list of valid units and their values リストの有効な単位とその値
      */
-    public static function getUnits() : array
+    public static function getUnits(): array
     {
         if (!isset(self::$units)) {
             self::$units = [
@@ -48,12 +51,13 @@ class UnitConverter
 
     /**
      * convert value from one unit to another
+     * 1つの単位から別の単位に値を変換する
      *
-     * @param mixed $value      value to convert
-     * @param string $from      unit to convert from
-     * @param string $to        unit to convert to
-     * @return mixed            converted value
-     * @throws Exception        if invalid units given
+     * @param mixed $value      value to convert 変換する値
+     * @param string $from      unit to convert from 変換元の単位
+     * @param string $to        unit to convert to 変換先の単位
+     * @return mixed            converted value 変換された値
+     * @throws Exception        if invalid units given 無効な単位が指定された場合
      */
     public static function convert(mixed $value, string $from, string $to): mixed /*throws exception*/
     {
@@ -66,17 +70,19 @@ class UnitConverter
             }
         }
 
-        throw new Exception("Invalid units given");
+        throw new Exception("Invalid units given");// 無効な単位が指定されました
     }
 
 
     /**
      * validate unit
      * check if given unit is valid for given type
+     * 単位を検証する
+     * 指定されたタイプに対して指定された単位が有効かどうかを確認します
      *
-     * @param [type] $unit    unit to validate
-     * @param [type] $type    type of unit to validate
-     * @return boolean        true if valid, false otherwise
+     * @param [type] $unit    unit to validate 単位を検証する
+     * @param [type] $type    type of unit to validate 検証する単位のタイプ
+     * @return boolean        true if valid, false otherwise 有効な場合はtrue、それ以外はfalse
      */
     public static function validateUnit($unit, $type): bool
     {
@@ -87,11 +93,13 @@ class UnitConverter
     /**
      * get value with unit
      * separate numerical value from unit e.g. 100g => [100, g]
+     * 値と単位を取得する
+     * 数値の値を単位から分離する 例：100g => [100, g]
      *
-     * @param mixed $value      value to separate
-     * @param string $unit      unit to separate
-     * @return array            separated value and unit
-     * @throws Exception        if invalid value/unit given
+     * @param mixed $value      value to separate　分離する値
+     * @param string $unit      unit to separate　分離する単位
+     * @return array            separated value and unit　分離された値と単位
+     * @throws Exception        if invalid value/unit given　無効な値/単位が指定された場合
      */
     public static function getValueWithUnit(mixed $value, string $unit = ""): array
     {
@@ -109,15 +117,14 @@ class UnitConverter
                     $unit = $matches[2];
                 }
             } else {
-                throw new Exception("Invalid value/unit given");
+                throw new Exception("Invalid value/unit given");// 無効な値/単位が指定されました
             }
         }
 
         if (!$unit) {
-            throw new Exception("Unit not given in line: " . __LINE__);
+            throw new Exception("Unit not given in line: " . __LINE__);// 単位が指定されていません
         }
 
         return [floatval($value), $unit];
     }
-
 }

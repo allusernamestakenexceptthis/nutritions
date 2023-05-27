@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Unit;
 
@@ -19,7 +21,7 @@ final class UnitConverterTest extends AbstractTestCase
         UnitConverter::convert(1000, "cal", "g");
 
 
-        list ($value, $unit) = UnitConverter::getValueWithUnit("1.5g");
+        list($value, $unit) = UnitConverter::getValueWithUnit("1.5g");
         $this->assertEquals($value, 1.5);
         $this->assertEquals($unit, "g");
     }

@@ -1,10 +1,8 @@
 <?php
-declare(strict_types=1);
-
-namespace App\Models\Nutritions;
 
 /**
  * This interface is used to define the methods that will be used in all Nutrition classes
+ * このインターフェースは、すべての栄養クラスで使用されるメソッドを定義するために使用されます。
  *
  * @copyright  Copyright (C) Gomilkyway (https://gomilkyway.com)
  * @package    App\Models\Nutritions
@@ -12,6 +10,10 @@ namespace App\Models\Nutritions;
  * @version    0.1.0
  * @license    MIT License (https://opensource.org/licenses/mit-license.php)
  */
+
+declare(strict_types=1);
+
+namespace App\Models\Nutritions;
 
 interface InterfaceNutrition
 {

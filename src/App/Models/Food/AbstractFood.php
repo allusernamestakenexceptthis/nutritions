@@ -1,10 +1,8 @@
 <?php
-declare(strict_types=1);
-
-namespace App\Models\Food;
 
 /**
  * Abstract class acts as parent that holds common methods, input and output
+ * アブストラクトクラスは、テスト用の共通メソッド、入力、出力を保持する親クラス
  *
  * @copyright  Copyright (C) Gomilkyway (https://gomilkyway.com)
  * @package    App\Models\Food
@@ -13,28 +11,38 @@ namespace App\Models\Food;
  * @license    MIT License (https://opensource.org/licenses/mit-license.php)
  */
 
+declare(strict_types=1);
+
+namespace App\Models\Food;
+
 use App\Models\Nutritions\AbstractNutrition;
 use App\Utils\UnitConverter;
+use InvalidArgumentException;
 
 abstract class AbstractFood implements InterfaceFood
 {
     //holds the food name
+    //食品名を保持
     protected string $name = "";
 
     //holds the food weight
+    //食品の重さを保持
     protected float $foodWeight = 0;
 
     //holds the food weight unit
+    //食品の重量単位を保持
     protected float $calories = 0;
 
     //holds the food nutritions
+    //食品の栄養素を保持
     protected array $nutritions = [];
 
     /**
      * AbstractFood constructor.
+     * AbstractFood コンストラクタ
      *
-     * @param string $name    food name
-     * @param mixed  $weight  food weight
+     * @param string $name    food name    食品名
+     * @param mixed  $weight  food weight  食品の重さ
      */
     public function __construct(string $name, mixed $weight)
     {
@@ -44,10 +52,12 @@ abstract class AbstractFood implements InterfaceFood
 
     /**
      * Add nutrition to the food
+     * 食品に栄養素を追加
      *
-     * @param AbstractNutrition $nutrition          Nutrition object
-     * @param mixed             $nutritionWeight    Nutrition weight format number + unit e.g. 1g
-     * @param mixed             $each               For each X weight e.g. 100g
+     * @param AbstractNutrition $nutrition          Nutrition object              栄養素オブジェクト
+     * @param mixed             $nutritionWeight    Nutrition weight
+     *                                              format number + unit e.g. 1g  数値+単位の形式
+     * @param mixed             $each               For each X weight e.g. 100g   100gなどの重量ごと
      * @return void
      */
     public function addNutrition(AbstractNutrition $nutrition, mixed $nutritionWeight, mixed $each = 100): void
@@ -71,8 +81,9 @@ abstract class AbstractFood implements InterfaceFood
 
     /**
      * Recalculate the calories and return the value
+     * カロリーを再計算して値を返す
      *
-     * @return float energy in calories per mg
+     * @return float energy in calories per mg  エネルギー（カロリー/ mg）
      */
     public function recalculate(): float
     {
@@ -85,17 +96,35 @@ abstract class AbstractFood implements InterfaceFood
 
     /**
      * Add to the calories calculations
+     * カロリー計算に追加
      *
      * @param array $nutrition holds nutrition information:
      *              model (nutrition object), weight, weight unit, each, each unit
+     *              栄養情報を保持する配列
+     *              モデル（栄養素オブジェクト）、重量、重量単位、各単位
      * @return void
      */
     public function addToCalculation(array &$nutrition): void
     {
         //convert each to mg
-        $eachInMg = (float)bcdiv((string)$this->foodWeight, (string)UnitConverter::convert($nutrition['each'], $nutrition['each_unit'], "mg"));
+        $eachInMg = (float)bcdiv(
+            (string)$this->foodWeight,
+            (string)UnitConverter::convert(
+                $nutrition['each'],
+                $nutrition['each_unit'],
+                "mg"
+            )
+        );
 
-        $weightInMg = (float)bcmul((string)UnitConverter::convert($nutrition['weight'], $nutrition['weight_unit'], "mg"), (string)$eachInMg, 10);
+        $weightInMg = (float)bcmul(
+            (string)UnitConverter::convert(
+                $nutrition['weight'],
+                $nutrition['weight_unit'],
+                "mg"
+            ),
+            (string)$eachInMg,
+            10
+        );
 
         $nutrition['energyInCPerMg'] = ($nutrition['model']->getEnergy($weightInMg, "cal", "mg"));
         $this->calories += $nutrition['energyInCPerMg'];
@@ -103,8 +132,9 @@ abstract class AbstractFood implements InterfaceFood
 
     /**
      * Set the weight of the food
+     * 食品の重さを設定
      *
-     * @param mixed $weight
+     * @param mixed $weight weight format number + unit e.g. 1g  数値+単位の形式
      * @return void
      */
     public function setWeight(mixed $weight): void
@@ -116,8 +146,9 @@ abstract class AbstractFood implements InterfaceFood
 
     /**
      * Get the food name
+     * 食品名を取得
      *
-     * @return string
+     * @return string food name 食品名
      */
     public function getName(): string
     {
@@ -126,22 +157,25 @@ abstract class AbstractFood implements InterfaceFood
 
     /**
      * Set the food name
+     * 食品名を設定
      *
-     * @param string $name
+     * @param string $name food name 食品名
      * @return void
      */
     public function setName(string $name): void
     {
         if (empty($name)) {
-            throw new \InvalidArgumentException("Food name cannot be empty");
+            //throw exception if name is empty 食品名が空の場合は例外をスロー
+            throw new InvalidArgumentException("Food name cannot be empty");
         }
         $this->name = $name;
     }
 
     /**
      * Get the food Calories (kcal) prt gram
+     * 食品のカロリー（kcal）を取得
      *
-     * @return integer
+     * @return integer food calories 食品のカロリー
      */
     public function getKCal(): int
     {
@@ -152,8 +186,9 @@ abstract class AbstractFood implements InterfaceFood
 
     /**
      * Get the food Calories (cal)
+     * 食品のカロリー（cal）を取得
      *
-     * @return float
+     * @return float food calories 食品のカロリー
      */
     public function getCalories(): float
     {
@@ -162,18 +197,20 @@ abstract class AbstractFood implements InterfaceFood
 
     /**
      * Get the food weight
+     * 食品の重さを取得
      *
-     * @return float
+     * @return float food weight 食品の重さ
      */
-    public function getWeight() : float
+    public function getWeight(): float
     {
         return $this->foodWeight;
     }
 
     /**
      * Get the food nutritional facts
+     * 食品の栄養成分を取得
      *
-     * @return array
+     * @return array food nutritional facts 食品の栄養成分
      */
     public function getNutritionalFacts($energyUnit = "kcal", $weightUnit = "g"): array
     {
@@ -201,8 +238,11 @@ abstract class AbstractFood implements InterfaceFood
             $energyInDesiredUnit = UnitConverter::convert($nutrition['energyInCPerMg'], "cal", $energyUnit);
             $weightInDesiredUnit = UnitConverter::convert($nutrition['weight'], $nutrition['weight_unit'], $weightUnit);
 
-            $energyInDesiredUnitSingle = (float)bcdiv((string)$energyInDesiredUnit, (string)$foodWeightInDesiredUnit, 10);
-
+            $energyInDesiredUnitSingle = (float)bcdiv(
+                (string)$energyInDesiredUnit,
+                (string)$foodWeightInDesiredUnit,
+                10
+            );
             $totalSingleEnergy += $energyInDesiredUnitSingle;
             $totalEnergy += $energyInDesiredUnit;
 
@@ -211,11 +251,10 @@ abstract class AbstractFood implements InterfaceFood
 
             $nutritionalFacts[$key]['energy'] += $energyInDesiredUnit;
             $nutritionalFacts[$key]['weight'] += $weightInDesiredUnit;
-
         }
         return [
-            'facts'=>$nutritionalFacts,
-            'totals'=>[
+            'facts' => $nutritionalFacts,
+            'totals' => [
                 'energy_per_unit' => $totalSingleEnergy,
                 'energy' => $totalEnergy,
             ],

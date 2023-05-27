@@ -1,10 +1,8 @@
 <?php
-declare(strict_types=1);
-
-namespace App\Models\Food;
 
 /**
  * Meal class acts as a food builder, a container for multiple foods
+ * ミールクラスは、複数の食品を格納するフードビルダー、コンテナとして機能します。
  *
  * @copyright  Copyright (C) Gomilkyway (https://gomilkyway.com)
  * @package    App\Models\Nutritions
@@ -13,26 +11,35 @@ namespace App\Models\Food;
  * @license    MIT License (https://opensource.org/licenses/mit-license.php)
  */
 
+declare(strict_types=1);
+
+namespace App\Models\Food;
+
 use App\Utils\UnitConverter;
 
 class Meal
 {
     // foods list
+    // 食品リスト
     private array $foods = [];
 
     // meal name
+    // 食事の名前
     private string $name = "";
 
     // total calories
+    // 総カロリー
     protected float $calories = 0;
 
     // total weight
+    // 総重量
     protected float $weight = 0;
 
     /**
      * Meal constructor
+     * ミールコンストラクタ
      *
-     * @param [type] $name  meal name
+     * @param [type] $name  meal name  食事の名前
      */
     public function __construct($name)
     {
@@ -41,8 +48,9 @@ class Meal
 
     /**
      * Add food to the meal
+     * 食事に食品を追加する
      *
-     * @param AbstractFood $food  food object
+     * @param AbstractFood $food  food object  食品オブジェクト
      * @return void
      */
     public function addFood(AbstractFood $food): void
@@ -57,13 +65,14 @@ class Meal
         $this->addToCalculation($food);
 
         $this->foods[] = $food;
-
     }
 
     /**
      * Add food to the calculation
+     * 計算に食品を追加する
      *
-     * @param array $food  food array containing model (Food)
+     * @param array $food  food array containing model (Food) and energyInCPerMg
+     *              モデル（食品）とenergyInCPerMgを含む食品配列
      * @return void
      */
     public function addToCalculation(array &$food): void
@@ -74,8 +83,9 @@ class Meal
 
     /**
      * Get the total calories of the meal (cal)
+     * 食事の総カロリーを取得する（cal）
      *
-     * @return float
+     * @return float total calories  総カロリー
      */
     public function getCalories(): float
     {
@@ -84,8 +94,9 @@ class Meal
 
     /**
      * Get the total Calories of the meal (kcal)
+     * 食事の総カロリーを取得する（kcal）
      *
-     * @return int
+     * @return int total Calories  総カロリー
      */
     public function getKCal(): int
     {
@@ -94,8 +105,9 @@ class Meal
 
     /**
      * Get the nutritional facts of the meal
+     * 食事の栄養成分を取得する
      *
-     * @return array
+     * @return array nutritional facts  栄養成分
      */
     public function getNutritionalFacts($energyUnit = "kcal", $weightUnit = "g"): array
     {
@@ -109,8 +121,9 @@ class Meal
 
     /**
      * Get the nutritional facts of the meal per food
+     * 食事の栄養成分を食品ごとに取得する
      *
-     * @return array
+     * @return array nutritional facts  栄養成分
      */
     public function getFactsPerFood($energyUnit = "kcal", $weightUnit = "g"): array
     {
@@ -123,6 +136,7 @@ class Meal
 
     /**
      * Get the name of the meal
+     * 食事の名前を取得する
      *
      * @return float
      */
@@ -133,8 +147,9 @@ class Meal
 
     /**
      * Set the name of the meal
+     * 食事の名前を設定する
      *
-     * @param string $name  meal name
+     * @param string $name  meal name 食事の名前
      * @return void
      */
     public function setName(string $name): void
@@ -144,8 +159,9 @@ class Meal
 
     /**
      * Get the weight of the meal
+     * 食事の重量を取得する
      *
-     * @return float
+     * @return float weight  重量
      */
     public function getWeight(): float
     {
@@ -154,12 +170,13 @@ class Meal
 
     /**
      * Merge and sum the nutritional facts of the different foods
+     * 異なる食品の栄養成分をマージして合計する
      *
-     * @param array $data  nutritional facts
-     * @param array $nutritions  nutritional facts
+     * @param array $data  nutritional facts       栄養成分
+     * @param array $nutritions  nutritional facts 栄養成分
      * @return array
      */
-    private function mergeAndSum($data, $nutritions) : array
+    private function mergeAndSum($data, $nutritions): array
     {
         foreach ($data as $key => $value) {
             if (is_array($value)) {
@@ -180,5 +197,4 @@ class Meal
 
         return $nutritions;
     }
-
 }

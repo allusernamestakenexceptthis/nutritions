@@ -1,10 +1,8 @@
 <?php
-declare(strict_types=1);
-
-namespace App\Models\Food;
 
 /**
  * This interface is used to define the methods that will be used in all Food classes
+ * このインターフェースは、すべての食品クラスで使用されるメソッドを定義するために使用されます。
  *
  * @copyright  Copyright (C) Gomilkyway (https://gomilkyway.com)
  * @package    App\Models\Nutritions
@@ -13,11 +11,14 @@ namespace App\Models\Food;
  * @license    MIT License (https://opensource.org/licenses/mit-license.php)
  */
 
+declare(strict_types=1);
+
+namespace App\Models\Food;
+
 use App\Models\Nutritions\AbstractNutrition;
 
 interface InterfaceFood
 {
-
     public function addNutrition(AbstractNutrition $nutrition, mixed $nutritionWeight): void;
 
     public function setWeight(mixed $weight): void;
@@ -33,5 +34,4 @@ interface InterfaceFood
     public function setName(string $name): void;
 
     public function getNutritionalFacts(): array;
-
 }
